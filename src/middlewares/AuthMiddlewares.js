@@ -1,4 +1,4 @@
-import connection, { usersTb } from "../database.js";
+import { usersTb } from "../database.js";
 import { signUpSchema } from "../models/AuthModels.js";
 
 export async function signUpMdw(res, res, nex) {

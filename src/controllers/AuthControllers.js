@@ -11,9 +11,9 @@ export async function signUp(req, res) {
 
         const userToInsert = { ...userData, encryptedPassword };
 
-        insertIntoDatabase( usersTb,userToInsert);
+        insertIntoDatabase(usersTb, userToInsert);
 
-        res.sendStatus(201)
+        res.sendStatus(201);
     } catch (err) {
         res.send(err);
         console.log(err);
