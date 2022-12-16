@@ -13,6 +13,9 @@ export async function signUpMdw(res, res, nex) {
         req.locals.userData = userInfoValidated;
         nex();
     } catch (err) {
+        if (err.message === "This email is taken") res.status(409);
+        //TODO JOI STATUS ERROR
+        else res.status(422);
         res.send(err);
         console.log(err);
     }
