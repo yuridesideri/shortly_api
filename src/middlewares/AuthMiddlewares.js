@@ -10,7 +10,7 @@ export async function signUpMdw(res, res, nex) {
         const emailToCheck = { email };
         if (checkDataExistence(usersTb, emailToCheck)) throw new Error("This email is taken");
 
-        res.locals.userData = userInfoValidated;
+        req.locals.userData = userInfoValidated;
         nex();
     } catch (err) {
         res.send(err);
