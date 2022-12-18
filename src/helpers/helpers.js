@@ -25,7 +25,7 @@ export async function checkDataExistence(table, object) {
 
     const { rows } = await connection.query(query, values);
 
-    return rows.length > 0 ? true : false;
+    return rows.length > 0;
 }
 
 export async function insertIntoDatabase(table, object) {
@@ -41,4 +41,22 @@ export async function insertIntoDatabase(table, object) {
     `;
 
     await connection.query(query, values);
+}
+
+
+export async function getDataFromDatabase(table, filter) {
+    const columns = Object.keys(filter);
+    const values = Object.values(filter);
+
+    const parsedColumnsValues = columns.map((col, ind) => `"${col}" = $${ind + 1}`).join(" AND ");
+
+    const query = `
+        SELECT * 
+        FROM ${table}
+        WHERE ${parsedColumnsValues}
+    `;
+
+    const { rows } = await connection.query(query, values);
+
+    return rows;
 }
