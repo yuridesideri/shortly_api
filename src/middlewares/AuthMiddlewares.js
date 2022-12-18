@@ -27,19 +27,10 @@ export async function signInMdw(req, res, nex) {
     try {
         const userDataToValidate = req.body;
         const userDataValidated = await signInSchema.validateAsync(userDataToValidate);
+        const { email } = userDataValidated;
 
-        const { rows } = await connection.query(
-            `
-            SELECT * 
-            FROM ${usersTb}
-            WHERE email = $1
-        `,
-            userDataValidated.email
-        );
+        if (!checkDataExistence(usersTb, { email })) throw new Error("Inexistent user/password");
 
-        if (rows.length === 0) throw new Error("Inexistent user/password");
-
-        req.locals.userData = rows[0];
         nex();
     } catch (err) {
         if (err.message === "Inexistent user/password") res.status(401);
