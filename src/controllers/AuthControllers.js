@@ -42,3 +42,5 @@ export async function signIn(req, res) {
         console.log(err);
     }
 }
+
+//TODO LOGOUT CONTROLLER

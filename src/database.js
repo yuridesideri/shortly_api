@@ -2,11 +2,7 @@ import {config} from "dotenv";
 import pkg from "pg";
 config();
 const connection = new pkg.Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'shortlyapi',
-    password: '4586',
-    port: 5432,
+    connectionString: process.env.DB_URL
 })
 
 export const usersTb = 'users';

@@ -57,6 +57,7 @@ export async function checkAuthorization(req, res, nex) {
 
         nex();
     } catch (err) {
+        if (err.message === "Not authenticated") res.status(401);
         res.send(err);
         console.log(err);
     }
