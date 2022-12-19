@@ -5,6 +5,6 @@ import { checkAuthorization, signInMdw, signUpMdw } from "../middlewares/AuthMid
 const authRouter = Router();
 
 authRouter.post("/signup", signUpMdw, signUp);
-authRouter.post('signin', signInMdw ,checkAuthorization, signIn);
+authRouter.post("/signin", signInMdw ,checkAuthorization, signIn);
 
 export {authRouter};
