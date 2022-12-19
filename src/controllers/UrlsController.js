@@ -62,3 +62,17 @@ export async function shortLink(req, res) {
         console.log(err);
     }
 }
+
+export async function deleteLink(req, res) {
+    try {
+        const { id } = req.params;
+
+        connection.query(`
+            DELETE 
+            FROM ${linksTb}
+            WHERE id = $1
+        `, [id])
+
+        res.sendStatus(204);
+    } catch (err) {}
+}

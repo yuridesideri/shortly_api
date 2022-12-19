@@ -1,4 +1,4 @@
-import connection, { sessionsTb, usersTb } from "../database.js";
+import connection, { linksTb, sessionsTb, usersTb } from "../database.js";
 import { checkDataExistence, getDataFromDatabase } from "../helpers/helpers.js";
 import { signInSchema, signUpSchema } from "../models/AuthModels.js";
 import jwt from "jsonwebtoken";
@@ -58,6 +58,26 @@ export async function checkAuthorization(req, res, nex) {
         nex();
     } catch (err) {
         if (err.message === "Not authenticated") res.status(401);
+        res.send(err);
+        console.log(err);
+    }
+}
+
+export async function deleteLinkMdw(req, res, nex) {
+    try {
+        const { id } = req.params;
+        const { id: userId } = req.locals.userData;
+
+        const { rows } = await getDataFromDatabase(linksTb, { id });
+
+        if (rows.legnth === 0) throw new Error("Inexistent link");
+
+        if (rows[0].createdByUserId !== userId) throw new Error("Unauthorized");
+
+        nex();
+    } catch (err) {
+        if (err.message === "Inexistent link") res.status(404);
+        else res.status(401);
         res.send(err);
         console.log(err);
     }
