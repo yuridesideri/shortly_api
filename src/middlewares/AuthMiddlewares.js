@@ -49,6 +49,7 @@ export async function checkAuthorization(req, res, nex) {
         const sessionRow = await getDataFromDatabase(sessionsTb, { userId });
 
         if (sessionRow.length === 0) throw new Error("Not authenticated");
+        jwt.verify(token, sessionRow[0].tokenSignature);
 
         const userDataRow = await getDataFromDatabase(usersTb, { id: userId });
 
