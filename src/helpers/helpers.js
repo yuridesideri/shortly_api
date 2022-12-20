@@ -60,3 +60,14 @@ export async function getDataFromDatabase(table, filter) {
 
     return rows;
 }
+
+
+export async function deleteSession(userId) {
+    await connection.query(
+        `
+        DELETE FROM sessions
+        WHERE "userId" = $1
+    `,
+        [userId]
+    );
+}

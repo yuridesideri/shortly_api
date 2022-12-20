@@ -31,7 +31,7 @@ export async function signIn(req, res) {
             numbers: true,
             symbols: true,
         });
-
+   
         const token = jwt.sign({ userId }, tokenSignature, { expiresIn: "1h" });
         await insertIntoDatabase(sessionsTb, { userId, tokenSignature });
 

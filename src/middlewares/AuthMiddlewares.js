@@ -1,5 +1,5 @@
 import connection, { linksTb, sessionsTb, usersTb } from "../database.js";
-import { checkDataExistence, getDataFromDatabase } from "../helpers/helpers.js";
+import { checkDataExistence, deleteSession, getDataFromDatabase } from "../helpers/helpers.js";
 import { signInSchema, signUpSchema } from "../models/AuthModels.js";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -52,7 +52,6 @@ export async function signInMdw(req, res, nex) {
 
 export async function checkAuthorization(req, res, nex) {
     try {
-
         const token = req.headers.authorization?.replace("Bearer ", "");
 
         if (!token) throw new Error("Not authenticated");
@@ -97,16 +96,16 @@ export async function deleteLinkMdw(req, res, nex) {
     }
 }
 
-export async function checkTokenForLogin(req, res, nex) {
+export async function deleteOldSessionLogin(req, res, nex) {
     try {
-        const token = req.headers.Authorization?.replaceAll("Bearer ");
+        const { id: userId } = res.locals.userData;
 
-        if (token) throw new Error("SignIn user Automatically");
+        await deleteSession(userId);
 
         nex();
     } catch (err) {
-        if (err.message === "SignIn user Automatically") res.redirect("/");
-        else res.status(400);
+        res.status(400);
         res.send(err);
+        console.log(err);
     }
 }
