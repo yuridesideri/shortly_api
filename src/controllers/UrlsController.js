@@ -9,7 +9,7 @@ export async function shortenUrl(req, res) {
         const shortenedUrl = nanoid(8);
 
         await insertIntoDatabase(linksTb, { createdByUserId, originalUrl, shortenedUrl });
-        res.status(201).send({ shortUlt: shortenedUrl });
+        res.status(201).send({ shortUrl: shortenedUrl });
     } catch (err) {
         res.status(400);
         res.send(err);
@@ -50,7 +50,7 @@ export async function shortLink(req, res) {
         await connection.query(
             `
             UPDATE ${linksTb}
-            SET "visitCount" += 1
+            SET "visitCount" = "visitCount" + 1
             WHERE id = $1
         `,
             [id]

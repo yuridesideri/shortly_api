@@ -52,7 +52,8 @@ export async function signInMdw(req, res, nex) {
 
 export async function checkAuthorization(req, res, nex) {
     try {
-        const token = req.headers.Authorization?.replaceAll("Bearer ");
+
+        const token = req.headers.authorization?.replace("Bearer ", "");
 
         if (!token) throw new Error("Not authenticated");
 
