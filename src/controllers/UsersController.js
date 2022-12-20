@@ -2,7 +2,7 @@ import connection, { linksTb, usersTb } from "../database.js";
 
 export async function getUserLinks(req, res) {
     try {
-        const { id } = req.locals.userData;
+        const { id } = res.locals.userData;
 
         const { rows } = await connection.query(
             `

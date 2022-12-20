@@ -5,7 +5,7 @@ export async function shortenUrlMdw(req, res, nex) {
     try {
         const { url: urlToValidate } = req.body;
         const validatedUrl = await urlSchema.validateAsync(urlToValidate);
-        req.locals.url = validatedUrl;
+        res.locals.url = validatedUrl;
         nex();
     } catch (err) {
         res.status(422);
@@ -19,7 +19,7 @@ export async function getUrlsMdw(req, res, nex) {
         const { id } = req.params;
         const validatedId = await urlIdSchema.validateAsync(id);
 
-        req.locals.linkId = parseInt(validatedId);
+        res.locals.linkId = parseInt(validatedId);
 
         nex();
     } catch (err) {
@@ -35,7 +35,7 @@ export async function shortLinkMdw(req, res, nex) {
 
         if (rows.length === 0) throw new Error("Link not found");
 
-        req.locals.link = rows[0];
+        res.locals.link = rows[0];
 
         nex();
     } catch (err) {

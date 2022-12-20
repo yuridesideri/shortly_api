@@ -1,6 +1,7 @@
 import connection, { linksTb, sessionsTb, usersTb } from "../database.js";
 import { checkDataExistence, getDataFromDatabase } from "../helpers/helpers.js";
 import { signInSchema, signUpSchema } from "../models/AuthModels.js";
+import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export async function signUpMdw(req, res, nex) {
@@ -12,7 +13,7 @@ export async function signUpMdw(req, res, nex) {
         const emailToCheck = { email };
         if (await checkDataExistence(usersTb, emailToCheck)) throw new Error("This email is taken");
 
-        req.locals.userData = userInfoValidated;
+        res.locals.userData = userInfoValidated;
         nex();
     } catch (err) {
         if (err.message === "This email is taken") res.status(409);
@@ -27,9 +28,17 @@ export async function signInMdw(req, res, nex) {
     try {
         const userDataToValidate = req.body;
         const userDataValidated = await signInSchema.validateAsync(userDataToValidate);
-        const { email } = userDataValidated;
+        const { email, password } = userDataValidated;
 
-        if (!checkDataExistence(usersTb, { email })) throw new Error("Inexistent user/password");
+        const userDataRow = await getDataFromDatabase(usersTb, { email });
+
+        if (userDataRow.length === 0) throw new Error("Inexistent user/password");
+
+        const isMatch = await bcrypt.compare(password, userDataRow[0].encryptedPassword);
+
+        if (!isMatch) throw new Error("Inexistent user/password");
+
+        res.locals.userData = userDataRow[0];
 
         nex();
     } catch (err) {
@@ -44,6 +53,9 @@ export async function signInMdw(req, res, nex) {
 export async function checkAuthorization(req, res, nex) {
     try {
         const token = req.headers.Authorization?.replaceAll("Bearer ");
+
+        if (!token) throw new Error("Not authenticated");
+
         const { userId } = jwt.decode(token);
 
         const sessionRow = await getDataFromDatabase(sessionsTb, { userId });
@@ -53,8 +65,8 @@ export async function checkAuthorization(req, res, nex) {
 
         const userDataRow = await getDataFromDatabase(usersTb, { id: userId });
 
-        req.locals.userData = userDataRow[0];
-        req.locals.session = sessionRow[0];
+        res.locals.userData = userDataRow[0];
+        res.locals.session = sessionRow[0];
 
         nex();
     } catch (err) {
@@ -67,7 +79,7 @@ export async function checkAuthorization(req, res, nex) {
 export async function deleteLinkMdw(req, res, nex) {
     try {
         const { id } = req.params;
-        const { id: userId } = req.locals.userData;
+        const { id: userId } = res.locals.userData;
 
         const { rows } = await getDataFromDatabase(linksTb, { id });
 
@@ -81,5 +93,19 @@ export async function deleteLinkMdw(req, res, nex) {
         else res.status(401);
         res.send(err);
         console.log(err);
+    }
+}
+
+export async function checkTokenForLogin(req, res, nex) {
+    try {
+        const token = req.headers.Authorization?.replaceAll("Bearer ");
+
+        if (token) throw new Error("SignIn user Automatically");
+
+        nex();
+    } catch (err) {
+        if (err.message === "SignIn user Automatically") res.redirect("/");
+        else res.status(400);
+        res.send(err);
     }
 }

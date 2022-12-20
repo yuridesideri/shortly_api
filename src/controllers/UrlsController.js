@@ -4,8 +4,8 @@ import { insertIntoDatabase } from "../helpers/helpers.js";
 
 export async function shortenUrl(req, res) {
     try {
-        const { id: createdByUserId } = req.locals.userData;
-        const { url: originalUrl } = req.locals.url;
+        const { id: createdByUserId } = res.locals.userData;
+        const { url: originalUrl } = res.locals.url;
         const shortenedUrl = nanoid(8);
 
         await insertIntoDatabase(linksTb, { createdByUserId, originalUrl, shortenedUrl });
@@ -19,7 +19,7 @@ export async function shortenUrl(req, res) {
 
 export async function getUrls(req, res) {
     try {
-        const { linkId } = req.locals;
+        const { linkId } = res.locals;
 
         const { rows } = await connection.query(
             `
@@ -45,7 +45,7 @@ export async function getUrls(req, res) {
 
 export async function shortLink(req, res) {
     try {
-        const { originalUrl: linkToRedirect, id } = req.locals.link;
+        const { originalUrl: linkToRedirect, id } = res.locals.link;
 
         await connection.query(
             `
