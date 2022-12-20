@@ -36,9 +36,10 @@ export async function getUserLinks(req, res) {
 export async function rankUsers (req,res){
     try {
         const {rows} = await connection.query(`
-            SELECT u.id, u.name, COUNT(l.id) AS "linksCount", SUM(l."visitCount")
+            SELECT u.id, u.name, COUNT(l.id) AS "linksCount", SUM(l."visitCount") as "visitCount"
             FROM ${usersTb} u
             LEFT JOIN ${linksTb} l ON u.id = l."createdByUserId"
+            GROUP BY u.id
             ORDER BY SUM (l."visitCount") LIMIT 10
         `)
 
