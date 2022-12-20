@@ -14,5 +14,5 @@ server.use(router);
 
 
 
-const port = process.env.SERVER_PORT;
-server.listen(4000, () => console.log("Server is starting in port " + port));
+const port = process.env.SERVER_PORT || 5000;
+server.listen(port, () => console.log("Server is starting in port " + port));

@@ -1,5 +1,5 @@
 import * as bcrypt from "bcrypt";
-import { sessionsTb, usersTb } from "../database.js";
+import { sessionsTb, usersTb } from "../../database/database.js";
 import { insertIntoDatabase } from "../helpers/helpers.js";
 import passGenerator from "generate-password";
 import jwt from "jsonwebtoken";

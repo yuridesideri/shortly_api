@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import connection, { linksTb } from "../database.js";
+import connection, { linksTb } from "../../database/database.js";
 import { insertIntoDatabase } from "../helpers/helpers.js";
 
 export async function shortenUrl(req, res) {

@@ -1,4 +1,4 @@
-import connection, { linksTb, usersTb } from "../database.js";
+import connection, { linksTb, usersTb } from "../../database/database.js";
 
 export async function getUserLinks(req, res) {
     try {

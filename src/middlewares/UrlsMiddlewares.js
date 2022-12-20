@@ -1,4 +1,4 @@
-import { linksTb } from "../database.js";
+import { linksTb } from "../../database/database.js";
 import { getDataFromDatabase } from "../helpers/helpers.js";
 import { urlIdSchema, urlSchema } from "../models/UrlsModels.js";
 

@@ -1,5 +1,5 @@
 import generator from "generate-password";
-import connection from "../database.js";
+import connection from "../../database/database.js";
 
 export function generateKey() {
     const password = generator.generate({

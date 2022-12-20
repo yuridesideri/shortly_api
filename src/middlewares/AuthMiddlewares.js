@@ -1,4 +1,4 @@
-import connection, { linksTb, sessionsTb, usersTb } from "../database.js";
+import connection, { linksTb, sessionsTb, usersTb } from "../../database/database.js";
 import { checkDataExistence, deleteSession, getDataFromDatabase } from "../helpers/helpers.js";
 import { signInSchema, signUpSchema } from "../models/AuthModels.js";
 import * as bcrypt from "bcrypt";
