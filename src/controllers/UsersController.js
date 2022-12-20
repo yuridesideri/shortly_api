@@ -4,21 +4,27 @@ export async function getUserLinks(req, res) {
     try {
         const { id } = res.locals.userData;
 
-        const { rows } = await connection.query(
+        const { rows: linkRows } = await connection.query(
             `
-            SELECT u.id, u.name, SUM(l."visitCount") AS "visitCount",
-            (SELECT l.id, l."shortenedUrl" as "shortUrl", l."originalUrl" as "url", l."visitCount"
+            SELECT id, "shortenedUrl" as "shortUrl", "originalUrl" as "url", "visitCount"
             FROM ${linksTb} l
-            WHERE "createdByUserId" = $1) as "shortnedUrls"
-            FROM ${usersTb} u
-            WHERE u.id = $1
+            WHERE "createdByUserId" = $1
         `,
             [id]
         );
 
-        res.status(200).send(rows[0]);
+        const { rows: [userRow]} = await connection.query(`
+            SELECT u.id, u.name, SUM(l."visitCount") as "visitCount"
+            FROM ${usersTb} u
+            LEFT JOIN ${linksTb} l ON u.id = l."createdByUserId"
+            WHERE u.id = $1
+            GROUP BY u.id
+        `, [id])
 
-        if (rows.length === 0) throw new Error("");
+        const objectToSend = {...userRow, shortenedUrls: linkRows}
+
+        res.status(200).send(objectToSend);
+
     } catch (err) {
         res.status(400);
         res.send(err);
