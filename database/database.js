@@ -2,7 +2,8 @@ import {config} from "dotenv";
 import pkg from "pg";
 config();
 const connection = new pkg.Pool({
-    connectionString: process.env.DB_URL
+    connectionString: process.env.DB_URL,
+    ssl: true
 })
 
 export const usersTb = 'users';
