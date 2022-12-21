@@ -81,11 +81,11 @@ export async function deleteLinkMdw(req, res, nex) {
         const { id } = req.params;
         const { id: userId } = res.locals.userData;
 
-        const { rows } = await getDataFromDatabase(linksTb, { id });
+        const linkRow = await getDataFromDatabase(linksTb, { id });
 
-        if (rows.legnth === 0) throw new Error("Inexistent link");
+        if (linkRow.length === 0) throw new Error("Inexistent link");
 
-        if (rows[0].createdByUserId !== userId) throw new Error("Unauthorized");
+        if (linkRow[0].createdByUserId !== userId) throw new Error("Unauthorized");
 
         nex();
     } catch (err) {
