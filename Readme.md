@@ -25,8 +25,34 @@ To get started with this project, you will need to do the following:
 
 **POST:**
 * `/signup`
+``` javascript
+  {
+    name: "João",
+    email: "joao@driven.com.br",
+    password: "driven",
+    confirmPassword: "driven"
+  }
+```
+<br/>
+
 * `/signin` 
+
+ ``` javascript
+  {
+    email: "joao@driven.com.br",
+    password: "driven"
+  }
+```
+<br/>
+
 * `/urls/shorten`
+
+```javascript
+  {
+    "url": "https://..."
+  }
+```
+<br/>
 
 **DELETE:**
 * `/urls/:id`
